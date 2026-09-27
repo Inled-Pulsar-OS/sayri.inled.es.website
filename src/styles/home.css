@@ -301,6 +301,17 @@
     height: auto;
 }
 
+/* The whole card opens the lightbox (easier to hit on touch);
+   the pointer and the focus ring say so. */
+.ui-media {
+    cursor: pointer;
+}
+
+.ui-media:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+}
+
 /* Expand button: hidden until the media is hovered, always
    reachable by keyboard focus. */
 .expand-btn {

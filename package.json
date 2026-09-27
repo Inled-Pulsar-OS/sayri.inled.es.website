@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "sync:docs": "mkdir -p src/content/docs && cp ../pulsar/PKG/sayri/docs/*.md src/content/docs/"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

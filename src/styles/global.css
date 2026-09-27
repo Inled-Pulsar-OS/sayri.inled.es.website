@@ -189,21 +189,27 @@ img, video {
     position: absolute;
     inset: 0;
     z-index: -1;
+    /* Palindrome stops on a horizontal gradient, tiled at 300%.
+       The loop shifts exactly one tile, and the last stop matches
+       the first, so the wrap is seamless: no hard cut anywhere. */
     background: linear-gradient(
-        110deg,
+        90deg,
         var(--blue),
-        var(--teal) 35%,
-        var(--violet) 70%,
-        var(--pink)
+        var(--teal) 16.7%,
+        var(--violet) 33.3%,
+        var(--pink) 50%,
+        var(--violet) 66.7%,
+        var(--teal) 83.3%,
+        var(--blue)
     );
-    background-size: 220% 100%;
+    background-size: 300% 100%;
     opacity: 0;
     transition: opacity var(--speed) ease;
 }
 
 .nav-cta:hover::before {
     opacity: 1;
-    animation: nav-slide 1.6s linear infinite;
+    animation: nav-slide 2s linear infinite;
 }
 
 @keyframes nav-slide {
@@ -211,7 +217,7 @@ img, video {
         background-position: 0% 50%;
     }
     to {
-        background-position: 200% 50%;
+        background-position: 150% 50%;
     }
 }
 
@@ -254,27 +260,31 @@ img, video {
 }
 
 /* The Sayri gradient washes across buttons on hover: a sliding
-   ::before layer under the label, present only while hovered. */
+   ::before layer under the label, present only while hovered.
+   Palindrome stops + a one-tile loop keep the wrap seamless. */
 .btn::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
     background: linear-gradient(
-        110deg,
+        90deg,
         var(--blue),
-        var(--teal) 35%,
-        var(--violet) 70%,
-        var(--pink)
+        var(--teal) 16.7%,
+        var(--violet) 33.3%,
+        var(--pink) 50%,
+        var(--violet) 66.7%,
+        var(--teal) 83.3%,
+        var(--blue)
     );
-    background-size: 220% 100%;
+    background-size: 300% 100%;
     opacity: 0;
     transition: opacity var(--speed) ease;
 }
 
 .btn:hover::before {
     opacity: 1;
-    animation: btn-slide 1.6s linear infinite;
+    animation: btn-slide 2s linear infinite;
 }
 
 @keyframes btn-slide {
@@ -282,7 +292,7 @@ img, video {
         background-position: 0% 50%;
     }
     to {
-        background-position: 200% 50%;
+        background-position: 150% 50%;
     }
 }
 

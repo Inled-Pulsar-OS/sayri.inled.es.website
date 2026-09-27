@@ -164,7 +164,7 @@ const platforms = [
 
             <div class="ui-grid">
                 <div class="ui-cell reveal">
-                    <div class="ui-media chroma" data-media>
+                    <div class="ui-media chroma" data-media role="button" tabindex="0" aria-haspopup="dialog" aria-label="Expand the orb recording in full screen">
                         <div class="chroma-inner">
                             <video
                                 src="/videos/orb.mp4"
@@ -190,7 +190,7 @@ const platforms = [
                 </div>
 
                 <div class="ui-cell reveal">
-                    <div class="ui-media chroma" data-media>
+                    <div class="ui-media chroma" data-media role="button" tabindex="0" aria-haspopup="dialog" aria-label="Expand the companions recording in full screen">
                         <div class="chroma-inner">
                             <video
                                 src="/videos/clippy.mp4"
@@ -380,7 +380,7 @@ const platforms = [
         <div class="container">
             <h2 class="h2 reveal">No hype. The evolution of OpenClaw.</h2>
             <p class="lead section-lead reveal">
-                Openclaw was hype but deep down it was slop vivecodeado without security awareness or good architecture. <br> 
+                Openclaw was hype but deep down it was slop vibecoded without security awareness or good architecture. <br> 
                 Sayri is the logical evolution, ready to be safe.
             </p>
         </div>
@@ -524,21 +524,38 @@ const platforms = [
         document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
         // Full-screen video lightbox. The inline video keeps playing;
-        // the dialog shows the same source with controls.
+        // the dialog shows the same source with controls. The whole
+        // media card opens it (easier on touch), while the Expand
+        // button stays as the visible affordance.
         const lightbox = document.getElementById("video-lightbox") as HTMLDialogElement | null;
         const lightboxVideo = lightbox?.querySelector("video") as HTMLVideoElement | null;
-        for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-expand]")) {
-            btn.addEventListener("click", () => {
-                if (!lightbox || !lightboxVideo) return;
-                const src = btn.closest("[data-media]")?.querySelector("video")?.getAttribute("src");
-                if (!src) return;
-                if (lightboxVideo.getAttribute("src") !== src) {
-                    lightboxVideo.setAttribute("src", src);
-                    lightboxVideo.load();
-                }
-                lightbox.showModal();
-                lightboxVideo.play().catch(() => {});
+        const openLightbox = (media: HTMLElement | null | undefined) => {
+            if (!lightbox || !lightboxVideo || !media) return;
+            const src = media.querySelector("video")?.getAttribute("src");
+            if (!src) return;
+            if (lightboxVideo.getAttribute("src") !== src) {
+                lightboxVideo.setAttribute("src", src);
+                lightboxVideo.load();
+            }
+            lightbox.showModal();
+            lightboxVideo.play().catch(() => {});
+        };
+        for (const media of document.querySelectorAll<HTMLElement>("[data-media]")) {
+            media.addEventListener("click", (e) => {
+                // The Expand button opens it too; skip here so a click on
+                // it does not trigger the card handler twice.
+                if ((e.target as HTMLElement).closest(".expand-btn")) return;
+                openLightbox(media);
             });
+            media.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openLightbox(media);
+                }
+            });
+        }
+        for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-expand]")) {
+            btn.addEventListener("click", () => openLightbox(btn.closest("[data-media]")));
         }
         lightbox?.querySelector(".video-lightbox-close")?.addEventListener("click", () => {
             lightboxVideo?.pause();
