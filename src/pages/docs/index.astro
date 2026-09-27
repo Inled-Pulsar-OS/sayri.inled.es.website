@@ -1,0 +1,36 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { DOC_ORDER } from "../../utils/docs.ts";
+---
+
+<Layout
+    title="Documentation: install, secure and extend the Sayri AI agent"
+    description="Official Sayri documentation: installation on Debian, Fedora, Arch and Flatpak, the five-level sandbox and permission rules, and guides to write skills, plugins, gateways and UIs."
+    schema="article"
+>
+    <section class="docs-index">
+        <div class="container">
+            <header class="docs-index-head">
+                <p class="kicker">Documentation</p>
+                <h1 class="h2">Everything about Sayri</h1>
+                <p class="lead" style="margin-top: 12px;">
+                    How to install it, how it works inside, and how to extend it with
+                    skills, plugins, gateways and UIs. The pages are generated from the
+                    markdown files in the repository.
+                </p>
+            </header>
+
+            <div class="docs-index-grid">
+                {
+                    DOC_ORDER.map((doc, i) => (
+                        <a href={`/docs/${doc.slug}/`} class="docs-index-card">
+                            <span class="docs-index-number">{String(i + 1).padStart(2, "0")}</span>
+                            <h2 class="docs-index-title">{doc.title}</h2>
+                            <p class="docs-index-desc">{doc.description}</p>
+                        </a>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+</Layout>

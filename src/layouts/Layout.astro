@@ -1,0 +1,146 @@
+---
+import "../styles/global.css";
+import "../styles/docs.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+    title?: string;
+    description?: string;
+    /** Relative canonical path, e.g. "/docs/security/". Defaults to the current URL. */
+    canonicalPath?: string;
+    /** Type of structured data to emit. */
+    schema?: "software" | "article" | "website";
+    /** Article metadata (docs pages). */
+    publishedTime?: string;
+}
+
+const SITE_URL = "https://sayri.inled.es";
+const SITE_NAME = "Sayri";
+const DEFAULT_IMAGE = "https://hosted.inled.es/cdn/sayri.png";
+
+const {
+    title = "Sayri | The AI agent with Security in mind and less token usage",
+    description = "Sayri (now Sayme) is an AI agent (like Openclaw) but a thousand times safer and with less token spending",
+    canonicalPath,
+    schema = "website",
+    publishedTime,
+} = Astro.props;
+
+const pageTitle = Astro.url.pathname === "/" ? title : `${title} | ${SITE_NAME}`;
+const canonical = `${SITE_URL}${canonicalPath ?? Astro.url.pathname}`;
+const isHome = Astro.url.pathname === "/";
+
+const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Inled Pulsar OS",
+    url: "https://os.inled.es",
+    logo: DEFAULT_IMAGE,
+};
+
+const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: SITE_URL,
+    description,
+    inLanguage: "en",
+    publisher: { "@type": "Organization", name: "Inled Pulsar OS", url: "https://os.inled.es" },
+};
+
+const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Sayri",
+    applicationCategory: "SecurityApplication",
+    applicationSubCategory: "AI voice agent",
+    operatingSystem: "Linux (Debian, Fedora, Arch), Flatpak; Windows and Android planned",
+    url: SITE_URL,
+    description,
+    image: DEFAULT_IMAGE,
+    screenshot: `${SITE_URL}/videos/ui-tour.jpg`,
+    softwareVersion: "0.1.33",
+    isAccessibleForFree: true,
+    author: { "@type": "Organization", name: "Inled Pulsar OS", url: "https://os.inled.es" },
+    offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+    featureList: [
+        "Five sandbox execution levels enforced in code (no-exec, read-only bwrap, isolated workspace, host user, Polkit-elevated)",
+        "Local speech recognition with whisper.cpp and local text-to-speech with Piper, wake word included",
+        "Multiple agent profiles in parallel, each with its own model, sandbox level, skills and gateways",
+        "Out-of-process gateway instances for Telegram, Discord and any documented channel",
+        "Skills compatible with OpenClaw SKILL.md, installable from the Pulsar OS store and ClawHub",
+        "Permission rules ({action, resource, effect}) with a tightening-only system policy layer",
+        "Obfuscated secrets vault with redaction before anything reaches the model",
+        "Any OpenAI-compatible endpoint: Ollama, OpenRouter free router, Groq, LM Studio, PrismML",
+    ],
+};
+
+const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: title,
+    description: description ?? "",
+    url: canonical,
+    inLanguage: "en",
+    image: DEFAULT_IMAGE,
+    author: { "@type": "Organization", name: "Inled Pulsar OS", url: "https://os.inled.es" },
+    publisher: { "@type": "Organization", name: "Inled Pulsar OS", url: "https://os.inled.es" },
+    ...(publishedTime ? { datePublished: publishedTime } : {}),
+};
+
+const jsonLd = [organizationSchema, schema === "software" ? softwareSchema : websiteSchema, ...(schema === "article" ? [articleSchema] : [])];
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>{pageTitle}</title>
+        <meta name="description" content={description} />
+        <meta name="author" content="Inled Pulsar OS" />
+        <link rel="canonical" href={canonical} />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+        <meta name="theme-color" content="#08080c" />
+
+        <!-- Open Graph -->
+        <meta property="og:site_name" content={SITE_NAME} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content={isHome ? "website" : "article"} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={DEFAULT_IMAGE} />
+        <meta property="og:image:alt" content="Sayri logo" />
+        <meta property="og:locale" content="en_US" />
+        {isHome && <meta property="og:video" content={`${SITE_URL}/videos/ui-tour.mp4`} />}
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={DEFAULT_IMAGE} />
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href={DEFAULT_IMAGE} />
+        <link rel="apple-touch-icon" href={DEFAULT_IMAGE} />
+
+        <!-- Structured data -->
+        {jsonLd.map((entry) => <script type="application/ld+json" set:html={JSON.stringify(entry)} />)}
+    </head>
+    <body>
+        <Nav />
+        <slot />
+        <Footer />
+
+        <script>
+            // Lazy video start: saves bandwidth and avoids autoplay races.
+            for (const video of document.querySelectorAll("video[autoplay]")) {
+                video.addEventListener("canplay", () => {
+                    video.play().catch(() => {});
+                }, { once: true });
+            }
+        </script>
+    </body>
+</html>

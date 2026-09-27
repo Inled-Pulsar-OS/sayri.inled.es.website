@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sayri.inled.es/sitemap-index.xml

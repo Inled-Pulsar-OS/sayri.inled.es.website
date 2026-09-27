@@ -1,0 +1,341 @@
+/* ============================================================
+   Sayri site styles.
+
+   Direction (DESIGN.md): dark Apple-like surface for a desktop
+   agent that actually looks like this. The Apple Intelligence
+   gradient is the product's own UI identity, so it appears in
+   exactly two places: the chroma border around real product
+   videos, and one headline keyword. Everything else is
+   typography on a near-black ground.
+   ============================================================ */
+
+:root {
+    --bg: #08080c;
+    --bg-raised: #101017;
+    --line: #23232e;
+    --text: #f2f2f5;
+    --text-2: #b0b0bc;
+    --text-3: #7a7a88;
+
+    --blue: #0a84ff;
+    --violet: #bf5af2;
+    --pink: #ff375f;
+    --teal: #64d2ff;
+
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+        Roboto, "Helvetica Neue", sans-serif;
+    --mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+
+    --speed: 0.2s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+}
+
+::selection {
+    background: rgba(191, 90, 242, 0.4);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+code, pre {
+    font-family: var(--mono);
+}
+
+:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+img, video {
+    max-width: 100%;
+}
+
+.container {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* The chroma border: one hairline gradient edge around real
+   product media. The gradient rotates slowly, so the Apple
+   Intelligence identity mark is alive instead of a static image. */
+.chroma {
+    position: relative;
+    border-radius: 14px;
+    padding: 1px;
+    background: linear-gradient(
+        135deg,
+        var(--blue),
+        var(--teal) 30%,
+        var(--violet) 65%,
+        var(--pink)
+    );
+    background-size: 300% 300%;
+    animation: chroma-flow 9s ease-in-out infinite;
+    display: block;
+}
+
+@keyframes chroma-flow {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+.chroma > .chroma-inner {
+    border-radius: 13px;
+    background: var(--bg-raised);
+    overflow: hidden;
+}
+
+/* Gradient text: headline keyword only. The pan matches the
+   chroma border's rhythm so both read as one material. */
+.grad {
+    background: linear-gradient(100deg, var(--teal), var(--violet) 60%, var(--pink));
+    background-size: 220% 220%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: chroma-flow 9s ease-in-out infinite;
+}
+
+/* ── Nav ─────────────────────────────────────────────────── */
+
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(8, 8, 12, 0.88);
+    border-bottom: 1px solid var(--line);
+}
+
+.nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 58px;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 600;
+    font-size: 0.98rem;
+    letter-spacing: -0.01em;
+}
+
+.nav-logo img {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: block;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 0.88rem;
+    color: var(--text-2);
+}
+
+.nav-links a:hover {
+    color: var(--text);
+}
+
+@media (max-width: 640px) {
+    .nav-links a:not(.nav-cta) {
+        display: none;
+    }
+}
+
+/* The nav CTA shares the button hover, but shaped as a pill. */
+.nav-cta {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+}
+
+.nav-cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+        110deg,
+        var(--blue),
+        var(--teal) 35%,
+        var(--violet) 70%,
+        var(--pink)
+    );
+    background-size: 220% 100%;
+    opacity: 0;
+    transition: opacity var(--speed) ease;
+}
+
+.nav-cta:hover::before {
+    opacity: 1;
+    animation: nav-slide 1.6s linear infinite;
+}
+
+@keyframes nav-slide {
+    from {
+        background-position: 0% 50%;
+    }
+    to {
+        background-position: 200% 50%;
+    }
+}
+
+/* ── Type scale ──────────────────────────────────────────── */
+
+.kicker {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 10px;
+}
+
+.h2 {
+    font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.18;
+}
+
+.lead {
+    color: var(--text-2);
+    font-size: 1.02rem;
+    max-width: 560px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+
+.btn {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    isolation: isolate;
+    overflow: hidden;
+    transition: border-color var(--speed) ease, color var(--speed) ease, background var(--speed) ease;
+}
+
+/* The Sayri gradient washes across buttons on hover: a sliding
+   ::before layer under the label, present only while hovered. */
+.btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+        110deg,
+        var(--blue),
+        var(--teal) 35%,
+        var(--violet) 70%,
+        var(--pink)
+    );
+    background-size: 220% 100%;
+    opacity: 0;
+    transition: opacity var(--speed) ease;
+}
+
+.btn:hover::before {
+    opacity: 1;
+    animation: btn-slide 1.6s linear infinite;
+}
+
+@keyframes btn-slide {
+    from {
+        background-position: 0% 50%;
+    }
+    to {
+        background-position: 200% 50%;
+    }
+}
+
+.btn-solid {
+    background: var(--text);
+    color: #0a0a0e;
+}
+
+.btn-solid:hover {
+    color: #fff;
+    border-color: transparent;
+}
+
+.btn-line {
+    border: 1px solid var(--line);
+    color: var(--text);
+}
+
+.btn-line:hover {
+    color: #fff;
+    border-color: transparent;
+}
+
+.nav-cta {
+    color: var(--text);
+    font-weight: 550;
+}
+
+.nav-cta:hover {
+    color: #fff;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+
+.footer {
+    border-top: 1px solid var(--line);
+    padding: 34px 0 44px;
+    color: var(--text-3);
+    font-size: 0.85rem;
+}
+
+.footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.footer a {
+    color: var(--text-2);
+}
+
+.footer a:hover {
+    color: var(--text);
+}

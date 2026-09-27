@@ -1,0 +1,20 @@
+---
+const current = Astro.url.pathname;
+const isDocs = current.startsWith("/docs");
+---
+
+<nav class="nav">
+    <div class="container nav-inner">
+        <a href="/" class="nav-logo">
+            <img src="https://hosted.inled.es/cdn/sayri.png" alt="Sayri logo" />
+            <span>Sayri</span>
+        </a>
+        <div class="nav-links">
+            <a href="/docs/getting-started/">Install</a>
+            <a href="/docs/security/">Security</a>
+            <a href="/docs/gateways/">Gateways</a>
+            <a href="/docs/" class={isDocs ? "nav-cta" : ""}>Docs</a>
+            <a href="https://store-os.inled.es" target="_blank" rel="noopener">Store</a>
+        </div>
+    </div>
+</nav>

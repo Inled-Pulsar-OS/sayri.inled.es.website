@@ -1,0 +1,554 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/home.css";
+
+const features = [
+    {
+        title: "Five sandbox levels",
+        body: "Security does not depend on the model, it is programmed. Level 0 never executes anything, levels 1 and 2 run inside bubblewrap, level 3 runs as your user, level 4 elevates through a Polkit dialog you must approve.",
+    },
+    {
+        title: "-100% token usage",
+        body: "A decent harness, that doesn't bombard the API with millions of input tokens. With savings in mind, made by and for those of us who don't have millions to spend on Claude.",
+    },
+    {
+        title: "Voice with local models",
+        body: "whisper.cpp transcribes, Piper speaks, wake word included. The audio never leaves the machine, less token usage and spend; only the LLM API receives your questions.",
+    },
+    {
+        title: "Easy and intuitive, as if Apple had made it",
+        body: "Run multiple agents in parallel with different sandboxes and gateways without having to read documentation. Intuitive interface, just the way you like it.",
+    },
+    {
+        title: "Telegram? yessss! And more!",
+        body: "Talk to Sayri from Telegram or Discord (and the app you want) without anyone being able to hack you, access your AI or without you misconfiguring it. Create gateways in one click with your favorite AI.",
+    },
+    {
+        title: "Skills, also from ClawHub",
+        body: "Install from the Pulsar OS store or from ClawHub. OpenClaw-style SKILL.md files work as they are: search once, install from either source, and the agent lists them in its own prompt.",
+    },
+    {
+        title: "Permission rules and policies",
+        body: "Rules are {action, resource, effect} with whole-value wildcards. System policies can only tighten what your own rules allow, never widen it.",
+    },
+];
+
+const extend = [
+    {
+        title: "Write a skill",
+        body: "One markdown file with a name and a description. If it works in OpenClaw, it works here.",
+        href: "/docs/skills/",
+        cta: "Skills guide",
+    },
+    {
+        title: "Write a plugin",
+        body: "Give it more functionality, make it superior.",
+        href: "/docs/plugins/",
+        cta: "Plugins guide",
+    },
+    {
+        title: "Connect a channel",
+        body: "Talk wherever you want to Sayri and create your own gateway without having to be a development expert",
+        href: "/docs/gateways/",
+        cta: "Gateways guide",
+    },
+    {
+        title: "Draw a new interface",
+        body: "From the Siri interface to Microsoft Agents like Clippy or Bonzy Buddy. Yours is next",
+        href: "/docs/uis/",
+        cta: "UIs guide",
+    },
+    {
+        title: "Publish it",
+        body: "Package your work for the Pulsar OS store. Submissions are reviewed by AI agents and scanned with VirusTotal.",
+        href: "/docs/store/",
+        cta: "Store guide",
+    },
+];
+
+const platforms = [
+    { icon: "/icons/pulsar.svg", name: "Pulsar OS", note: "First-class. It works beautifully here." },
+    { icon: "/icons/debian.svg", name: "Debian", note: ".deb package" },
+    { icon: "/icons/fedora.svg", name: "Fedora", note: ".rpm package" },
+    { icon: "/icons/archlinux.svg", name: "Arch", note: "packaging in the releases" },
+    { icon: "/icons/flatpak.svg", name: "Flatpak", note: "everywhere else, any distribution" },
+    { icon: "/icons/windows.svg", name: "Windows", note: "coming soon" },
+    { icon: "/icons/android.svg", name: "Android", note: "coming soon" },
+];
+---
+
+<Layout
+    title="Sayri | The AI agent with Security in mind and less token usage"
+    description="Sayri (now Sayme) is an AI agent (like Openclaw) but a thousand times safer and with less token spending"
+    schema="software"
+>
+    <!-- Sayme rename notice. -->
+    <div class="rename-note">
+        <div class="container">
+            <p>
+                Sayri will soon be called <strong>Sayme</strong>. Same project, new name.
+                (And no legal issues)
+            </p>
+        </div>
+    </div>
+
+    <!-- Cursor trail: a small physical comet in Sayri colors. -->
+    <canvas id="trail-canvas" aria-hidden="true"></canvas>
+
+    <!-- Hero. The video is the product; the headline is one sentence. -->
+    <section class="hero">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="container">
+            <h1 class="hero-title">
+                Sayri, the AI agent designed<br />
+                <span class="grad">with security in mind</span>
+            </h1>
+            <p class="hero-sub">
+                It can talk, see, listen and do anything both from its multiple UI's and through your favorite messaging app. A thousand times less token spending than Openclaw or Hermes, different sandbox levels and freedom for you.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-solid" href="https://github.com/Inled-Pulsar-OS/sayri/releases" target="_blank" rel="noopener">Download</a>
+                <a class="btn btn-line" href="/docs/getting-started/">Docs</a>
+            </div>
+            <p class="hero-note">
+                Sayri is in VERY EARLY ALPHA FOR OTHER OS. we <strong>recommend using <a href="https://os.inled.es">Pulsar OS</a> for a better experience</strong>
+            </p>
+
+            <figure class="chroma hero-media reveal">
+                <div class="chroma-inner">
+                    <video
+                        src="/videos/ui-tour.mp4"
+                        poster="/videos/ui-tour.jpg"
+                        autoplay
+                        muted
+                        loop
+                        playsinline
+                        aria-label="The Sayri panel: tabs for chat, history, agents, skills, plugins, gateways, vault and settings"
+                    ></video>
+                    <figcaption>
+                        The Sayri panel. Tabs: Chat, History, Agents, Skills, Plugins,
+                        Gateways, Vault, Settings.
+                    </figcaption>
+                </div>
+            </figure>
+        </div>
+    </section>
+
+    <!-- Features right after the hero. -->
+    <section class="section">
+        <div class="container">
+            <p class="kicker reveal">Features</p>
+            <h2 class="h2 reveal">A lot of easy to use features</h2>
+            <div class="feat-list">
+                {
+                    features.map((f) => (
+                        <div class="feat-row reveal">
+                            <h3>{f.title}</h3>
+                            <p>{f.body}</p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Two UIs, shown at equal width; hovering a video reveals an
+         Expand control that opens it full-screen. -->
+    <section class="section">
+        <div class="container">
+            <p class="kicker reveal">Interfaces</p>
+            <h2 class="h2 reveal">The orb, and the ones from the 90's</h2>
+            <p class="lead section-lead reveal">
+                Do you want to look like a millionaire as if you had Siri or do you want to go back to the glory years of Windows? We have a UI for every wish!
+            </p>
+
+            <div class="ui-grid">
+                <div class="ui-cell reveal">
+                    <div class="ui-media chroma" data-media>
+                        <div class="chroma-inner">
+                            <video
+                                src="/videos/orb.mp4"
+                                autoplay
+                                muted
+                                loop
+                                playsinline
+                                aria-label="The Sayri orb animating on the desktop"
+                            ></video>
+                            <button class="expand-btn" type="button" data-expand aria-label="Expand the orb recording">Expand</button>
+                        </div>
+                    </div>
+                    <div class="ui-text">
+                        <h3>Orb UI</h3>
+                        <p>
+                            A circular indicator pinned to the screen reacts to your audio level
+                            and animates through idle, listening, thinking and speaking. The card
+                            next to it, the cajita, shows live transcriptions, replies and tool
+                            output.
+                        </p>
+                        <p class="ui-fact">GTK4, layer-shell, WebKit. The default interface.</p>
+                    </div>
+                </div>
+
+                <div class="ui-cell reveal">
+                    <div class="ui-media chroma" data-media>
+                        <div class="chroma-inner">
+                            <video
+                                src="/videos/clippy.mp4"
+                                autoplay
+                                muted
+                                loop
+                                playsinline
+                                aria-label="Bonzi, the classic companion, talking in a speech balloon on the desktop"
+                            ></video>
+                            <button class="expand-btn" type="button" data-expand aria-label="Expand the companions recording">Expand</button>
+                        </div>
+                    </div>
+                    <div class="ui-text">
+                        <h3>Microsoft Agent's Like</h3>
+                        <p>
+                            Clippy, Bonzi Buddy, Merlin, Rover, Peedy, Genie, Links, Rocky and F1 live
+                            on the desktop with speech balloons and sound effects. Under the
+                            nostalgia they speak the same IPC protocol as everything else.
+                        </p>
+                        <p class="ui-fact">Back to the 90s/2000</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security: the table from the README, nothing invented. -->
+    <section class="section">
+        <div class="container">
+            <p class="kicker reveal">Security</p>
+            <h2 class="h2 reveal">Five levels, enforced in code</h2>
+            <p class="lead section-lead reveal">
+                The AI ​​does not decide security, it is decided by the code itself, depending on the sanbox level you configure. Don't trust AI, we protect your agent from prompt injection and malicious vectors
+            </p>
+
+            <table class="level-table reveal">
+                <thead>
+                    <tr>
+                        <th scope="col">Level</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">What it does</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>LEVEL_0_NO_EXEC</td>
+                        <td>Pure conversation. No command ever executes.</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>LEVEL_1_READONLY</td>
+                        <td>Read-only filesystem, ephemeral /tmp, bubblewrap container.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>LEVEL_2_ISOLATED_DEV</td>
+                        <td>Read-only system plus a persistent workspace per agent.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>LEVEL_3_HOST_USER</td>
+                        <td>Normal execution as your user. The default.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>LEVEL_4_HOST_ROOT</td>
+                        <td>Elevated via pkexec, always with a graphical confirmation.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <ul class="sec-list reveal">
+                <li>Privilege escalation is impossible below level 4.</li>
+                <li>Secrets live in an obfuscated vault, mode 600, and are redacted from every prompt and log.</li>
+                <li>Skill and plugin downloads are audited with a risk score; 80 or above blocks the install.</li>
+                <li>Zip extraction rejects path traversal; slugs are sanitized.</li>
+                <li>The IPC socket is mode 600 and validates the connecting user.</li>
+            </ul>
+            <p class="sec-more reveal">
+                The details, including the rule grammar and the policy files: <a href="/docs/security/">sandbox and security</a>.
+            </p>
+        </div>
+    </section>
+
+    <!-- Where it runs. -->
+    <section class="section">
+        <div class="container">
+            <p class="kicker reveal">We are ready for Linux, perfect in Pulsar OS and preparing for Windows and Android</p>
+            <h2 class="h2 reveal">Download it now!</h2>
+            <div class="avail-grid">
+                {
+                    platforms.map((p) => (
+                        <div class="avail-cell reveal">
+                            <img src={p.icon} alt="" aria-hidden="true" />
+                            <div>
+                                <strong>{p.name}</strong>
+                                <span>{p.note}</span>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+            <div class="avail-notes reveal">
+                <p>
+                    Grab the current build from the <a href="https://github.com/Inled-Pulsar-OS/sayri/releases" target="_blank" rel="noopener">releases page</a>.
+                    Questions about Sayri? <a href="https://link.inled.es/discord" target="_blank" rel="noopener">Discord</a> and
+                    <a href="https://link.inled.es/telegram" target="_blank" rel="noopener">Telegram</a>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Free AI: Sayri works with providers that cost nothing. -->
+    <section class="section">
+        <div class="container">
+            <p class="kicker reveal">Use it without paying for the model</p>
+            <h2 class="h2 reveal">Use it with FREE AI, without credit card!!</h2>
+            <p class="lead section-lead reveal">
+                Sayri talks to any OpenAI-compatible endpoint. That includes options that
+                cost nothing, so the agent itself stays free to run.
+            </p>
+
+            <div class="free-grid">
+                <a class="free-card reveal" href="https://store-os.inled.es/#pkg=sayri-prismml" target="_blank" rel="noopener">
+                    <img class="free-icon free-icon-img" src="/icons/prismml.png" alt="PrismML plugin icon" />
+                    <div>
+                        <h3>PrismML</h3>
+                        <p>
+                            The innovative ternary and 1-bit models will provide excellent speed to your computer and minimal intelligence.
+                        </p>
+                        <span class="free-cta">Get the plugin</span>
+                    </div>
+                </a>
+
+                <a class="free-card reveal" href="https://openrouter.ai" target="_blank" rel="noopener">
+                    <img class="free-icon free-icon-img" src="https://hosted.inled.es/cdn/openrouter-logo.svg" alt="openrouter logo" />
+                    <div>
+                        <h3>OpenRouter FREE router</h3>
+                        <p>
+                            Use intelligent AI models for free WITHOUT CREDIT CARD. Daily limits, no hassle.
+                        </p>
+                        <span class="free-cta">Open OpenRouter</span>
+                    </div>
+                </a>
+
+                <a class="free-card reveal" href="https://groq.com" target="_blank" rel="noopener">
+                    <img class="free-icon free-icon-img" src="https://hosted.inled.es/cdn/groq.webp" alt="groq logo" />
+                    <div>
+                        <h3>Groq</h3>
+                        <p>
+                            The most generous, the most intelligent models. Daily limits, worry-free
+                        </p>
+                        <span class="free-cta">Open Groq</span>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Extend it. -->
+    <section class="section">
+        <div class="container">
+            <p class="kicker reveal">Extend it</p>
+            <h2 class="h2 reveal">Make it do what you need</h2>
+            <p class="lead section-lead reveal">
+                Sayri is meant to be widened by the people who use it: teach it a skill,
+                give it a plugin, connect a channel, or draw it a new face.
+            </p>
+            <div class="extend-grid">
+                {
+                    extend.map((e) => (
+                        <div class="extend-cell reveal">
+                            <h3>{e.title}</h3>
+                            <p>{e.body}</p>
+                            <a href={e.href}>{e.cta}</a>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Positioning: one honest paragraph. -->
+    <section class="section">
+        <div class="container">
+            <h2 class="h2 reveal">No hype. The evolution of OpenClaw.</h2>
+            <p class="lead section-lead reveal">
+                Openclaw was hype but deep down it was slop vivecodeado without security awareness or good architecture. <br> 
+                Sayri is the logical evolution, ready to be safe.
+            </p>
+        </div>
+    </section>
+
+    <!-- Outbound links, on their own. -->
+    <section class="section">
+        <div class="container">
+            <div class="out-rows">
+                <a class="out-row reveal" href="/docs/">
+                    <div>
+                        <h3>Documentation</h3>
+                        <p>Setup, architecture, security, and how to write skills, plugins, gateways and UIs. Generated from the markdown in the repo.</p>
+                    </div>
+                    <span class="out-go">Read</span>
+                </a>
+                <a class="out-row reveal" href="https://store-os.inled.es" target="_blank" rel="noopener">
+                    <div>
+                        <h3>Pulsar OS store</h3>
+                        <p>Skills and plugins for Sayri, reviewed by AI agents and scanned with VirusTotal.</p>
+                    </div>
+                    <span class="out-go">Open</span>
+                </a>
+                <a class="out-row reveal" href="https://link.inled.es/discord" target="_blank" rel="noopener">
+                    <div>
+                        <h3>Discord</h3>
+                        <p>Ask about Sayri, share plugins, report what breaks.</p>
+                    </div>
+                    <span class="out-go">Join</span>
+                </a>
+                <a class="out-row reveal" href="https://link.inled.es/telegram" target="_blank" rel="noopener">
+                    <div>
+                        <h3>Telegram</h3>
+                        <p>The same conversation, on Telegram.</p>
+                    </div>
+                    <span class="out-go">Join</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <dialog class="video-lightbox" id="video-lightbox">
+        <div class="video-lightbox-frame">
+            <video controls loop playsinline></video>
+            <button class="video-lightbox-close" type="button" aria-label="Close">Close</button>
+        </div>
+    </dialog>
+
+    <script>
+        // Cursor trail. Small dots spawn at the pointer with its velocity,
+        // then coast with drag and fade out: a comet, not a spotlight.
+        const canvas = document.getElementById("trail-canvas");
+        if (canvas && window.matchMedia("(pointer: fine)").matches) {
+            const ctx = canvas.getContext("2d");
+            const COLORS = ["10,132,255", "100,210,255", "191,90,242", "255,55,95"];
+            const dots = [];
+            let px = null, py = null, running = false;
+
+            const resize = () => {
+                // Reset the transform before scaling: resize can fire twice,
+                // and a stacked scale would blur the trail.
+                canvas.width = Math.round(innerWidth * devicePixelRatio);
+                canvas.height = Math.round(innerHeight * devicePixelRatio);
+                ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+            };
+            resize();
+            addEventListener("resize", resize, { passive: true });
+
+            addEventListener("pointermove", (e) => {
+                if (px !== null) {
+                    const dx = e.clientX - px;
+                    const dy = e.clientY - py;
+                    const speed = Math.hypot(dx, dy);
+                    // Spawn rate and size scale with how fast the pointer moves.
+                    const count = Math.min(Math.ceil(speed / 4), 6);
+                    for (let i = 0; i < count; i++) {
+                        dots.push({
+                            x: px + dx * Math.random(),
+                            y: py + dy * Math.random(),
+                            vx: dx * 0.06 + (Math.random() - 0.5) * 0.6,
+                            vy: dy * 0.06 + (Math.random() - 0.5) * 0.6,
+                            life: 1,
+                            decay: 0.014 + Math.random() * 0.012,
+                            r: 2.5 + Math.random() * 4 + speed * 0.025,
+                            c: COLORS[(Math.random() * COLORS.length) | 0],
+                        });
+                    }
+                }
+                px = e.clientX;
+                py = e.clientY;
+                if (!running) {
+                    running = true;
+                    requestAnimationFrame(tick);
+                }
+            }, { passive: true });
+
+            function tick() {
+                ctx.clearRect(0, 0, innerWidth, innerHeight);
+                for (let i = dots.length - 1; i >= 0; i--) {
+                    const d = dots[i];
+                    d.x += d.vx;
+                    d.y += d.vy;
+                    d.vx *= 0.96; // drag: the trail keeps only part of the motion
+                    d.vy *= 0.96;
+                    d.vy += 0.015; // a whisper of gravity, so it settles
+                    d.life -= d.decay;
+                    if (d.life <= 0) {
+                        dots.splice(i, 1);
+                        continue;
+                    }
+                    const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r * 3);
+                    g.addColorStop(0, `rgba(${d.c},${0.7 * d.life})`);
+                    g.addColorStop(0.5, `rgba(${d.c},${0.22 * d.life})`);
+                    g.addColorStop(1, `rgba(${d.c},0)`);
+                    ctx.fillStyle = g;
+                    ctx.beginPath();
+                    ctx.arc(d.x, d.y, d.r * 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                if (dots.length > 0) {
+                    requestAnimationFrame(tick);
+                } else {
+                    running = false;
+                    px = py = null;
+                }
+            }
+        }
+
+        // Reveal on scroll.
+        const observer = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-visible");
+                        observer.unobserve(entry.target);
+                    }
+                }
+            },
+            { threshold: 0.1 },
+        );
+        document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+        // Full-screen video lightbox. The inline video keeps playing;
+        // the dialog shows the same source with controls.
+        const lightbox = document.getElementById("video-lightbox") as HTMLDialogElement | null;
+        const lightboxVideo = lightbox?.querySelector("video") as HTMLVideoElement | null;
+        for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-expand]")) {
+            btn.addEventListener("click", () => {
+                if (!lightbox || !lightboxVideo) return;
+                const src = btn.closest("[data-media]")?.querySelector("video")?.getAttribute("src");
+                if (!src) return;
+                if (lightboxVideo.getAttribute("src") !== src) {
+                    lightboxVideo.setAttribute("src", src);
+                    lightboxVideo.load();
+                }
+                lightbox.showModal();
+                lightboxVideo.play().catch(() => {});
+            });
+        }
+        lightbox?.querySelector(".video-lightbox-close")?.addEventListener("click", () => {
+            lightboxVideo?.pause();
+            lightbox.close();
+        });
+        lightbox?.addEventListener("click", (e) => {
+            if (e.target === lightbox) {
+                lightboxVideo?.pause();
+                lightbox.close();
+            }
+        });
+    </script>
+</Layout>

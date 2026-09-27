@@ -1,0 +1,103 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
+import { marked } from "marked";
+import { docMeta, neighborDocs } from "../../utils/docs.ts";
+
+export async function getStaticPaths() {
+    const entries = await getCollection("docs");
+    return entries
+        .filter((entry) => entry.id !== "index") // index.md is the repo TOC; /docs/ is its web counterpart
+        .map((entry) => ({
+        params: { slug: entry.id },
+        props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const meta = docMeta(entry.id);
+const { prev, next } = neighborDocs(entry.id);
+
+// Render the markdown body (front matter is stripped by the loader).
+const raw = entry.body ?? "";
+const html = await marked.parse(raw, { gfm: true, async: true });
+
+// A doc is "current" in the sidebar when its id matches.
+const allSlugs = [
+    "getting-started",
+    "architecture",
+    "security",
+    "skills",
+    "plugins",
+    "gateways",
+    "uis",
+    "store",
+];
+---
+
+<Layout
+    title={`${meta.title}: Sayri documentation`}
+    description={`${meta.description} Official Sayri documentation, generated from the repository markdown.`}
+    schema="article"
+>
+    <section class="docs">
+        <div class="container">
+            <div class="docs-layout">
+                <aside class="docs-sidebar">
+                    <h2 class="docs-sidebar-title">Documentation</h2>
+                    <nav class="docs-nav">
+                        {
+                            allSlugs.map((slug) => {
+                                const m = docMeta(slug);
+                                return (
+                                    <a
+                                        href={`/docs/${slug}/`}
+                                        class={slug === entry.id ? "is-current" : ""}
+                                    >
+                                        {m.title}
+                                    </a>
+                                );
+                            })
+                        }
+                    </nav>
+                </aside>
+
+                <article class="docs-article">
+                    <nav class="docs-breadcrumb" aria-label="Breadcrumb">
+                        <a href="/docs/">Docs</a>
+                        <span>/</span>
+                        <span>{meta.title}</span>
+                    </nav>
+
+                    <header class="docs-header">
+                        <h1 class="docs-title">{meta.title}</h1>
+                        {meta.description && <p class="docs-lead">{meta.description}</p>}
+                    </header>
+
+                    <div class="prose" set:html={html} />
+
+                    <nav class="docs-pagination" aria-label="Article navigation">
+                        {
+                            prev ? (
+                                <a href={`/docs/${prev.slug}/`}>
+                                    <span class="label">← Previous</span>
+                                    <span class="title">{prev.title}</span>
+                                </a>
+                            ) : (
+                                <span />
+                            )
+                        }
+                        {
+                            next && (
+                                <a href={`/docs/${next.slug}/`} class="next">
+                                    <span class="label">Next →</span>
+                                    <span class="title">{next.title}</span>
+                                </a>
+                            )
+                        }
+                    </nav>
+                </article>
+            </div>
+        </div>
+    </section>
+</Layout>
